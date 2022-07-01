@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <!-- jquery -->
+    <script
+	src="https://code.jquery.com/jquery-3.6.0.min.js"
+	integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+	crossorigin="anonymous"></script>
+    <!-- socket.io client -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <!-- Optional bootstrap theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <!-- Latest compiled and minified bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script><title>Socket.IO chat</title>
+    <!-- css for speech bubbles -->
+    <link rel="stylesheet" type="text/css" href="/css/speechbubble.css">
+    <link rel="stylesheet" type="text/css" href="/css/pbot.css">
+  </head>
+  <body>
+    <div class="container">
+      
+      <h1> Emotion Twenty Questions Chat </h1>
+      <div id="log"></div>
+    </div><!-- /.container -->
+      
+
+	<form id="talk" method='POST' action="#" role="form" class="form">
+	  <div class="form-group">
+	    <input type="text" id="talk_data" name="talk_data" autocomplete="off" >
+	    <input type="submit" id="send" value="Send" >
+	  </div>
+	</form>
+
+
+      <!-- 	 <footer> -->
+      <!-- 	   <div class="container talk"> -->
+      <!-- 	<div class="row"> -->
+      <!-- 	  <div class="col-md-1"></div> -->
+      <!-- 	  <div class="col-md-9"> -->
+      <!-- 	    <form id="talk" method='POST' action="#" role="form" class="form"> -->
+      <!-- 	      <div class="input-group"> -->
+      <!-- 		<input type="text" id="talk_data" name="talk_data" class="form-control talk_data"/> -->
+      <!-- 		<span class="input-group-btn"> -->
+      <!-- 		  <button class="btn btn-default" type="submit">Send</button> -->
+      <!-- 		</span> -->
+      <!-- 	      </div><\!-- /input-group -\-> -->
+      <!-- 	    </form> -->
+      <!-- 	  </div><\!-- /.col-lg-6 -\-> -->
+      <!-- 	  <div class="col-md-1"></div> -->
+      <!-- 	</div><\!-- /.row -\-> -->
+      <!-- </div><\!-- /.container -\-> -->
+      <!-- 	 </footer> -->
+
+    
+    </body>
+	  
+    <script>
+      function handleScroll() {
+        if ($(window).scrollTop() + $(window).height() < $(document).height()) {
+	  window.scroll(0, $(document).height());
+	}
+							 };
+      $(document).ready(function(){
+      namespace = "/pbot";
+      var socket = io.connect("http://" + document.domain + ':' + location.port + namespace);
+      socket.on('connect', function() {
+        socket.emit('log', {data: "I'm connected!"});
+      });
+      // event handler for server sent data
+
+      // the data is displayed in the "Messages" section of the page
+      socket.on('loguser', function(msg) {
+        //$('#log').append('<div class="loguser row">' + '<div class="col-md-1 col-xs-1"/>' + '<div class="col-md-10 col-xs-10"> <p class="triangle-isosceles right">' + msg.data + '</p></div>' + '<div class="col-md-1 col-xs-1 participant">USER</div>' + '</div>');
+	$('#log').append('<div class="loguser row">' + '<div class="col-md-1 col-xs-1"></div>'  + '<div class="col-md-10 col-xs-10"> <p class="triangle-isosceles right">' + msg.data + '</p></div>' + '<div class="col-md-1 col-xs-1 participant">USER</div>' + '</div>');
+	handleScroll();						 
+      });
+
+      socket.on('logagent', function(msg) {
+        $('#log').append('<div class="logagent row">' + '<div class="col-md-1 col-xs-1 participant">AGENT</div> <div class="col-md-10 col-xs-10"> <p class="triangle-isosceles left">' + msg.data + '</p></div>' + '<div class="col-md-1 col-xs-1"/>' + '</div>');
+	handleScroll();						 
+      });
+      $('form#talk').submit(function(event) {
+        socket.emit('UserUtt', {data: $('#talk_data').val()});
+        $('#talk_data').val('');
+        return false;
+      });
+
+    });
+  </script>
+</html>
+    

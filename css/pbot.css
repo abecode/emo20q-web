@@ -1,0 +1,47 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+    font: 18px Helvetica, Arial; 
+    color: #ffffff;
+    background: linear-gradient(45deg, #38343b, #000000);
+    height: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% auto;
+}
+
+
+
+form * {
+    font: 18px Helvetica, Arial;
+    color: #000;
+}
+#talk {
+    padding: 3px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    
+}
+input#talk_data {
+    border: 0;
+    padding: 10px;
+    width: 90%;
+    /*margin-right: .5%;*/
+}
+input#send
+{
+    width: 9%;
+    background: rgb(130, 224, 255);
+    border: none;
+    padding: 10px;
+}
+
+#log {
+    /*margin: 0px 5px;*/
+    padding: 10px 5px 65px;
+}
+div.participant {
+    padding-top: 30px;
+}
+
+

@@ -75,17 +75,63 @@ def img(filename):
 def pbot_connect():
     """ first connection where the dialog system starts"""
 
-    time.sleep(1)
+    # create agent
+    # first get agent file name if it exists
+    if 'agent_id' in session: # if the user has already visited
+        agent_id = session['agent_id']
+    else:
+        agent_id = uuid.uuid4()
+        print(agent_id)
+        session['agent_id'] = agent_id
+
+    # try top open and load the pickled agent
+    pickled_path = str(agent_id)
+    print(pickled_path)
+    if os.path.exists(pickled_path):
+        try:
+            """ this part is a bit verbose and error prone"""
+            episodic_buffer, state_name, belief = \
+                    pickle.load(open(str(pickled_path), "rb"))
+            agent = QuestionerAgent(episodicBuffer=episodic_buffer,
+                                    lexicalAccess=LexicalAccess(),
+                                    semanticKnowledge=SemanticKnowledge())
+            #import pdb; pdb.set_trace()
+            agent.set_state(getattr(agent, state_name))
+            agent.belief = belief
+        except Exception as ex: # normally a bare except is not good but this is just
+                # for illustration
+            print(ex)
+            agent = QuestionerAgent()
+    else: # this should occur when it is the users first visit
+        agent = QuestionerAgent()
+
+
+    #time.sleep(1)
     emit('loguser', {'data': '[user enters]'})
     time.sleep(1)
-    emit('logagent', {'data': '[emo20q agent enters the universe of discourse]'})
-    time.sleep(1)
-    emit('logagent', {'data': 'Hi I\'m the Emotion Twenty Questions Agent.'})
-    time.sleep(1)
-    emit('logagent', {'data': 'In the game of emotion twenty questions (EMO20Q), you will pick an emotion, then I\'ll try to guess it.'})
-    time.sleep(1)
-    emit('logagent', {'data': 'I\'m not a real person, but you can talk to me like you would talk to a normal person.  Let me know when you have picked an emotion word and are ready to start!'})
-    time.sleep(1)
+
+    # give the user input to the agent
+    agent_output = agent("")
+    print(agent_output)
+
+    # pickle the agent
+    pickle.dump([agent.episodicBuffer, agent.state.name,
+                 agent.belief], open(pickled_path, "wb"))
+
+    #return('Agent says: ' + agent_output)
+    for line in agent_output.strip().split("\n"):
+        time.sleep(1)
+        emit('logagent', {'data': "%s" % line})
+
+
+    # emit('logagent', {'data': '[emo20q agent enters the universe of discourse]'})
+    # time.sleep(1)
+    # emit('logagent', {'data': 'Hi I\'m the Emotion Twenty Questions Agent.'})
+    # time.sleep(1)
+    # emit('logagent', {'data': 'In the game of emotion twenty questions (EMO20Q), you will pick an emotion, then I\'ll try to guess it.'})
+    # time.sleep(1)
+    # emit('logagent', {'data': 'I\'m not a real person, but you can talk to me like you would talk to a normal person.  Let me know when you have picked an emotion word and are ready to start!'})
+    #time.sleep(1)
 
     sessionid = session['sessionid']
 
@@ -152,4 +198,4 @@ def pbot_disconnect():
 
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app, host="0.0.0.0", debug=True)

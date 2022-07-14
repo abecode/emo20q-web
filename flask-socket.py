@@ -39,6 +39,8 @@ path = "./emo20q"
 if path not in sys.path:
     sys.path.insert(0,path)
 sys.path.insert(0,path)
+
+import emo20q
 from emo20q.gpdaquestioner import QuestionerAgent
 
 # it would be nice to just pickle the whole agent, but because of
@@ -53,7 +55,13 @@ from emo20q.gpdaquestioner import EpisodicBuffer
 @app.route('/')
 def index():
     """ the main webpage """
-    session['sessionid'] = uuid.uuid4()
+    #session['sessionid'] = uuid.uuid4()
+    #session['ip'] = request.remote
+
+    # we will assume that if the page is reloaded, that the user
+    # intends to start a new game so we'll remove the session info
+    if 'agent_id' in session:
+        del session['agent_id']
     app.logger.debug("session:%s"%session['sessionid'], extra={"ip": request.remote_addr})
     return render_template('emo20q_chat.html')
 
@@ -110,8 +118,17 @@ def pbot_connect():
     emit('loguser', {'data': '[user enters]'})
     time.sleep(1)
 
-    # give the user input to the agent
-    agent_output = agent("")
+    # give the user input to the agent, start with just empty to start
+    try:
+        agent_output = agent("")
+    except emo20q.gpda.GPDAError: # if there's an error, reset the session
+        del session['agent_id']
+        agent_id = uuid.uuid4()
+        print(agent_id)
+        session['agent_id'] = agent_id
+        agent = QuestionerAgent()
+        agent_output = agent("")
+
     print(agent_output)
 
     # pickle the agent
@@ -179,7 +196,12 @@ def pbot_message(message):
 
 
     # give the user input to the agent
-    agent_output = agent(user_input)
+    try:
+        agent_output = agent(user_input)
+    except emo20q.gpda.GPDAError:
+        agent_output = ("You can close the window/tab now.\n"
+                        "If you want to play again, please refresh the page.")
+
     print(agent_output)
 
     # pickle the agent
@@ -191,11 +213,14 @@ def pbot_message(message):
         time.sleep(1)
         emit('logagent', {'data': "%s" % line})
 
-    
+
 @socketio.on('disconnect', namespace='/pbot')
 def pbot_disconnect():
     session.clear()
 
+@app.route("/get_my_ip", methods=["GET"])
+def get_my_ip():
+    return request.remote_addr
 
 if __name__ == '__main__':
     socketio.run(app, host="0.0.0.0", debug=True)

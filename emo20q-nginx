@@ -1,0 +1,9 @@
+server {
+  listen 80;	
+  server_name emo20q.org www.emo20q.org;
+
+  location / {
+    include uwsgi_params;
+    uwsgi_pass unix:/home/ec2-user/emo20q-web/emo20q.sock;
+  }
+}

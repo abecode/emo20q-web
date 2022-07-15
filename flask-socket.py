@@ -62,7 +62,7 @@ def index():
     # intends to start a new game so we'll remove the session info
     if 'agent_id' in session:
         del session['agent_id']
-    app.logger.debug("session:%s"%session['sessionid'], extra={"ip": request.remote_addr})
+    app.logger.debug("new session", extra={"ip": request.remote_addr})
     return render_template('emo20q_chat.html')
 
 @app.route('/css/<path:filename>')
@@ -150,7 +150,7 @@ def pbot_connect():
     # emit('logagent', {'data': 'I\'m not a real person, but you can talk to me like you would talk to a normal person.  Let me know when you have picked an emotion word and are ready to start!'})
     #time.sleep(1)
 
-    sessionid = session['sessionid']
+    #sessionid = session['sessionid']
 
 # socket message events
 @socketio.on('UserUtt', namespace='/pbot')
@@ -223,4 +223,6 @@ def get_my_ip():
     return request.remote_addr
 
 if __name__ == '__main__':
-    socketio.run(app, host="0.0.0.0", debug=True)
+    socketio.run(app, host="0.0.0.0",
+                 #debug=True,
+                 port=5000)

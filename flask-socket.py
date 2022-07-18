@@ -10,6 +10,9 @@ import sys  # set the python path to find emo20q module
 import time # for sleep
 import uuid # for creating a random name for the pickled agent
 
+from gevent import monkey
+monkey.patch_all()
+
 # import the web application factory class and instantiate it
 from flask import Flask
 print(__name__)

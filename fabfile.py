@@ -23,6 +23,8 @@ from invoke import run
 PROFILE = "ust"
 #PROFILE = "default"
 APP_NAME = "emo20q"
+#INSTANCE_TYPE = "t2.micro"
+INSTANCE_TYPE = "t3a.medium"
 AMI = "ami-02d1e544b84bf7502" # aws linux as of 2022-07-13
 
 
@@ -44,7 +46,9 @@ def spin_up_server(c):
     ipaddress = get_ip(c)
     if ipaddress:
         return ipaddress
-    result = run(f"aws --profile {PROFILE} ec2 run-instances --image-id {AMI} --count 1 --instance-type t2.micro --key-name ust-aws --query 'Instances[0].InstanceId'", echo=True)
+    #result = run(f"aws --profile {PROFILE} ec2 run-instances --image-id {AMI} --count 1 --instance-type t2.micro --key-name ust-aws --query 'Instances[0].InstanceId'", echo=True)
+    result = run(f"aws --profile {PROFILE} ec2 run-instances --image-id {AMI} --count 1 --instance-type {INSTANCE_TYPE}  --key-name ust-aws --query 'Instances[0].InstanceId'", echo=True)
+    t3a.medium
     print(result)
     #pdb.set_trace()
     instance_id = result.stdout.strip()
@@ -74,7 +78,7 @@ def terminate_server(c):
         print("aborted")
 
 @invoke.task
-def install_software(c):
+def install_software_basics(c):
     c.sudo("yum -y update", echo=True)
     c.sudo("yum -y install git", echo=True)
     c.sudo("yum -y install emacs-nox", echo=True)
@@ -89,28 +93,7 @@ def install_software(c):
     # # designed to deal with a lot of the dependencies so some of these
     # # might be redundant
     # c.run("/home/ec2-user/miniconda3/bin/conda install -q pytorch torchvision -c pytorch")
-    # stuff for uwsgi,
-    # c.f. https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uswgi-and-nginx-on-ubuntu-18-04
-    c.sudo("yum install -y python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools", echo=True)
-    c.sudo("yum install -y gcc gcc-c++ make", echo=True) # equiv to build-essential
-    c.sudo("yum install -y python3-devel", echo=True)
-    c.run("pip3 install  gevent gevent-websocket", echo=True)
-    c.sudo("yum install -y pcre-devel")
-    c.sudo("yum install -y openssl-devel") # https://stackoverflow.com/questions/24183053/how-to-build-uwsgi-with-ssl-support-to-use-the-websocket-handshake-api-function
-    c.run("pip3 install wheel uwsgi", echo=True)
-    c.sudo("amazon-linux-extras enable epel", echo=True)
-    c.sudo("yum clean metadata", echo=True)
-    c.sudo("yum install -y epel-release", echo=True)
-    c.sudo("yum install -y nginx", echo=True) # https://devcoops.com/install-nginx-on-aws-ec2-amazon-linux/
-    # also https://stackoverflow.com/questions/17413526/nginx-missing-sites-available-directory
-    c.sudo("mkdir -p /var/www/emo20q.org/html", echo=True)
-    c.sudo("chown -R $USER:$USER /var/www/emo20q.org/html", echo=True)
-    c.sudo("chmod -R 755 /var/www", echo=True)
-    c.sudo("chown chown $USER:$USER /etc/nginx/sites-available", echo=True)
-    c.sudo("ln -s /etc/nginx/sites-available/emo20q /etc/nginx/sites-enabled", echo=True)
-    c.sudo("usermod -a -G $USER nginx", echo=True)
-    c.sudo("yum install -y python2-certbot-nginx", echo=True)
-    c.sudo("sudo certbot --nginx -d emo20q.org -d www.emo20q.org", echo=True)
+
 @invoke.task
 def git_clone(c):
     """ run this manually to double check """
@@ -128,3 +111,38 @@ def git_clone(c):
     c.run("cd emo20q-web && pip3 install -r requirements.txt",
           echo=True)
     # note: due to python3.7 on aws, networkx only available > 2.6
+    
+@invoke.task
+def install_webserver_software(c):
+    # stuff for uwsgi,
+    # c.f. https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uswgi-and-nginx-on-ubuntu-18-04
+    c.sudo("yum install -y python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools", echo=True)
+    c.sudo("yum install -y gcc gcc-c++ make", echo=True) # equiv to build-essential
+    c.sudo("yum install -y python3-devel", echo=True)
+    c.run("pip3 install  gevent gevent-websocket", echo=True)
+    c.sudo("yum install -y pcre-devel")
+    c.sudo("yum install -y openssl-devel") # https://stackoverflow.com/questions/24183053/how-to-build-uwsgi-with-ssl-support-to-use-the-websocket-handshake-api-function
+    c.run("pip3 install wheel uwsgi", echo=True)
+    c.sudo("amazon-linux-extras enable epel", echo=True)
+    c.sudo("yum clean metadata", echo=True)
+    c.sudo("yum install -y epel-release", echo=True)
+    c.sudo("yum install -y nginx", echo=True) # https://devcoops.com/install-nginx-on-aws-ec2-amazon-linux/
+    # also https://stackoverflow.com/questions/17413526/nginx-missing-sites-available-directory
+    c.sudo("mkdir -p /var/www/emo20q.org/html", echo=True)
+    c.sudo("chown -R $USER:$USER /var/www/emo20q.org/html", echo=True)
+    c.sudo("chmod -R 755 /var/www", echo=True)
+    c.sudo("mkdir /etc/nginx/sites-available")
+    c.sudo("mkdir /etc/nginx/sites-enabled")
+    c.sudo("chown  $USER:$USER /etc/nginx/sites-available", echo=True)
+    c.run("cp /home/ec2-user/emo20q-web/emo20q-nginx /etc/nginx/sites-available",
+          echo=True)
+    c.sudo("ln -s /etc/nginx/sites-available/emo20q-nginx /etc/nginx/sites-enabled",
+           echo=True)
+    c.sudo("perl -i.bak -pe '$_ =~ s|(http {)|$1\n\tinclude /etc/nginx/sites-enabled/*;|' /etc/nginx/nginx.conf", echo=True) # inplace edit nginx with perl
+    c.sudo("perl -i.bak2 -pe 'BEGIN{$start=0};/# Settings for a TLS/...END and $_ =~ s/^#(?! Settings)//' /etc/nginx/nginx.conf", echo=True) # more perl foo to uncomment tls section
+    c.sudo("usermod -a -G $USER nginx", echo=True)
+    c.sudo("systemctl enable nginx.service", echo=True)
+    c.sudo("systemctl start nginx.service", echo=True)
+    c.sudo("yum install -y python2-certbot-nginx", echo=True)
+    #c.sudo("sudo certbot --nginx -d emo20q.org -d www.emo20q.org", echo=True)
+    

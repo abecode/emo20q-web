@@ -18,6 +18,7 @@ import os
 import time
 import invoke
 from invoke import run
+import patchwork.transfers
 
 #REGION = os.environ.get("REGION", "us-east-2")
 PROFILE = "ust"
@@ -93,6 +94,16 @@ def install_software_basics(c):
     # # designed to deal with a lot of the dependencies so some of these
     # # might be redundant
     # c.run("/home/ec2-user/miniconda3/bin/conda install -q pytorch torchvision -c pytorch")
+    c.sudo("yum install -y python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools", echo=True)
+    c.sudo("yum install -y gcc gcc-c++ make", echo=True) # equiv to build-essential
+    c.sudo("yum install -y python3-devel", echo=True)
+    c.run("pip3 install  gevent gevent-websocket", echo=True)
+    c.sudo("yum install -y pcre-devel")
+    c.sudo("yum install -y openssl-devel") # https://stackoverflow.com/questions/24183053/how-to-build-uwsgi-with-ssl-support-to-use-the-websocket-handshake-api-function
+    c.run("pip3 install wheel uwsgi", echo=True)
+    c.sudo("amazon-linux-extras enable epel", echo=True)
+    c.sudo("yum clean metadata", echo=True)
+    c.sudo("yum install -y epel-release", echo=True)
 
 @invoke.task
 def git_clone(c):
@@ -108,7 +119,7 @@ def git_clone(c):
     c.run("git clone https://github.com/abecode/emo20q-web", echo=True)
     c.run("cd emo20q-web && git clone https://github.com/abecode/emo20q",
           echo=True)
-    c.run("cd emo20q-web && pip3 install -r requirements.txt",
+    c.run("cd emo20q-web && pip3 install -r requirements.awsprod.txt",
           echo=True)
     # note: due to python3.7 on aws, networkx only available > 2.6
     
@@ -116,16 +127,6 @@ def git_clone(c):
 def install_webserver_software(c):
     # stuff for uwsgi,
     # c.f. https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uswgi-and-nginx-on-ubuntu-18-04
-    c.sudo("yum install -y python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools", echo=True)
-    c.sudo("yum install -y gcc gcc-c++ make", echo=True) # equiv to build-essential
-    c.sudo("yum install -y python3-devel", echo=True)
-    c.run("pip3 install  gevent gevent-websocket", echo=True)
-    c.sudo("yum install -y pcre-devel")
-    c.sudo("yum install -y openssl-devel") # https://stackoverflow.com/questions/24183053/how-to-build-uwsgi-with-ssl-support-to-use-the-websocket-handshake-api-function
-    c.run("pip3 install wheel uwsgi", echo=True)
-    c.sudo("amazon-linux-extras enable epel", echo=True)
-    c.sudo("yum clean metadata", echo=True)
-    c.sudo("yum install -y epel-release", echo=True)
     c.sudo("yum install -y nginx", echo=True) # https://devcoops.com/install-nginx-on-aws-ec2-amazon-linux/
     # also https://stackoverflow.com/questions/17413526/nginx-missing-sites-available-directory
     c.sudo("mkdir -p /var/www/emo20q.org/html", echo=True)
@@ -134,15 +135,30 @@ def install_webserver_software(c):
     c.sudo("mkdir /etc/nginx/sites-available")
     c.sudo("mkdir /etc/nginx/sites-enabled")
     c.sudo("chown  $USER:$USER /etc/nginx/sites-available", echo=True)
+    c.sudo("chown  $USER:$USER /etc/nginx/sites-enabled", echo=True)
     c.run("cp /home/ec2-user/emo20q-web/emo20q-nginx /etc/nginx/sites-available",
           echo=True)
     c.sudo("ln -s /etc/nginx/sites-available/emo20q-nginx /etc/nginx/sites-enabled",
            echo=True)
-    c.sudo("perl -i.bak -pe '$_ =~ s|(http {)|$1\n\tinclude /etc/nginx/sites-enabled/*;|' /etc/nginx/nginx.conf", echo=True) # inplace edit nginx with perl
-    c.sudo("perl -i.bak2 -pe 'BEGIN{$start=0};/# Settings for a TLS/...END and $_ =~ s/^#(?! Settings)//' /etc/nginx/nginx.conf", echo=True) # more perl foo to uncomment tls section
+    #c.sudo("perl -i.bak -pe '$_ =~ s|(http {)|$1\n\tinclude /etc/nginx/sites-enabled/*;|' /etc/nginx/nginx.conf", echo=True) # inplace edit nginx with perl
+    #c.sudo("perl -i.bak2 -pe 'BEGIN{$start=0};/# Settings for a TLS/...END and $_ =~ s/^#(?! Settings)//' /etc/nginx/nginx.conf", echo=True) # more perl foo to uncomment tls section
     c.sudo("usermod -a -G $USER nginx", echo=True)
+    c.sudo("mv  /etc/nginx/nginx.conf /etc/nginx/nginx.conf_bak", echo=True)
+    c.sudo("cp /home/ec2-user/emo20q-web/nginx.conf /etc/nginx/", echo=True)
     c.sudo("systemctl enable nginx.service", echo=True)
     c.sudo("systemctl start nginx.service", echo=True)
     c.sudo("yum install -y python2-certbot-nginx", echo=True)
     #c.sudo("sudo certbot --nginx -d emo20q.org -d www.emo20q.org", echo=True)
     
+    # this is the cmd I've been using for the webserver:
+    # uwsgi --http :5000 --gevent 200 --http-websockets --master --wsgi-file flask-socket.py --callable app
+    # don't really know exactly what it does or if there are better settings!
+    # also cf uwsgi -i uwsgi.ini : there is examples of using unix sockets
+    # taking out master makes uswgi easier to kill:
+    # uwsgi --http :5000 --gevent 200  --wsgi-file flask_answerer_api.py --callable app
+
+@ invoke.task
+def cp_model(c):
+    """copy model to aws """
+    #c.put("/Users/kaze7539/Downloads/saved_model_bert_emo20qa", "/home/ec2-user")
+    patchwork.transfers.rsync(c, "/Users/kaze7539/Downloads/saved_model_bert_emo20qa", "/home/ec2-user")

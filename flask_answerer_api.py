@@ -21,6 +21,7 @@ import official.nlp.bert.tokenization
 from gevent import monkey
 monkey.patch_all()
 
+
 # import the web application factory class and instantiate it
 from flask import Flask
 print(__name__)
@@ -41,18 +42,21 @@ from  flask import request
 from flask import render_template
 
 # model setup
-
+os.environ['NO_GCE_CHECK'] = 'true'
 gs_folder_bert = "gs://cloud-tpu-checkpoints/bert/v3/uncased_L-12_H-768_A-12"
-tf.io.gfile.listdir(gs_folder_bert)
+#tf.io.gfile.listdir(gs_folder_bert)
+
+
 # Set up tokenizer to generate Tensorflow dataset
 tokenizer = bert.tokenization.FullTokenizer(
-    vocab_file=os.path.join(gs_folder_bert, "vocab.txt"),
+   #vocab_file=os.path.join(gs_folder_bert, "vocab.txt"),
+   vocab_file="vocab.txt",
      do_lower_case=True)
 
 # print("Vocab size:", len(tokenizer.vocab))
 
-#export_dir = "/home/ec2-user/saved_model_bert_emo20qa"
-export_dir = "/Users/kaze7539/Downloads/saved_model_bert_emo20qa"
+export_dir = "/home/ec2-user/saved_model_bert_emo20qa"
+#export_dir = "/Users/kaze7539/Downloads/saved_model_bert_emo20qa"
 model  = tf.saved_model.load(export_dir)
 
 lab2id = {"no":0, "maybe":1, "yes":2}
@@ -192,4 +196,5 @@ def get_my_ip():
     return request.remote_addr
 
 if __name__ == '__main__':
-    app.run(debug=True)
+   #app.run(debug=True)
+   app.run(debug=True, host="0.0.0.0", port=5001)

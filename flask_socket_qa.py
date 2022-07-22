@@ -36,58 +36,22 @@ from flask import render_template
 from flask_socketio import SocketIO, emit
 socketio = SocketIO(app, logger=True, engineio_logger=True)
 
+# import emo20q agent: need to set the path
+path = "./emo20q"
+if path not in sys.path:
+    sys.path.insert(0,path)
+sys.path.insert(0,path)
 
-# for tensorflow/bert
-import numpy as np
-import tensorflow as tf
-# !pip install -q tf-models-official==2.4.0
-from official.nlp import bert
-import official.nlp.bert.tokenization
-
-# Set up tokenizer to generate Tensorflow dataset
-tokenizer = bert.tokenization.FullTokenizer(
-   #vocab_file=os.path.join(gs_folder_bert, "vocab.txt"),
-   vocab_file="vocab.txt",
-     do_lower_case=True)
-export_dir = "/home/ec2-user/saved_model_bert_emo20qa"
-#export_dir = "/Users/kaze7539/Downloads/saved_model_bert_emo20qa"
-model  = tf.saved_model.load(export_dir)
-
-lab2id = {"no":0, "maybe":1, "yes":2}
-id2lab = {v:k for k,v in lab2id.items()}
-
-def encode_sentence2(s):
-   tokens = list(tokenizer.tokenize(s))
-   tokens.append('[SEP]')
-   return tokenizer.convert_tokens_to_ids(tokens)
-
-def bert_encode2(data_dict):
-  num_examples = len(data_dict["emotion"])
-  
-  sentence1 = tf.ragged.constant([
-      encode_sentence2(s)
-      for s in np.array(data_dict["emotion"])])
-  sentence2 = tf.ragged.constant([
-      encode_sentence2(s)
-       for s in np.array(data_dict["question"])])
-
-  cls = [tokenizer.convert_tokens_to_ids(['[CLS]'])]*sentence1.shape[0]
-  input_word_ids = tf.concat([cls, sentence1, sentence2], axis=-1)
-
-  input_mask = tf.ones_like(input_word_ids).to_tensor()
-
-  type_cls = tf.zeros_like(cls)
-  type_s1 = tf.zeros_like(sentence1)
-  type_s2 = tf.ones_like(sentence2)
-  input_type_ids = tf.concat(
-      [type_cls, type_s1, type_s2], axis=-1).to_tensor()
-
-  inputs = {
-      'input_word_ids': input_word_ids.to_tensor(),
-      'input_mask': input_mask,
-      'input_type_ids': input_type_ids}
-
-  return inputs
+import emo20q
+#from emo20q.gpdaquestioner import QuestionerAgent
+from emo20q.qaagent import QAAgent
+# it would be nice to just pickle the whole agent, but because of
+# lambdas we need to reconstruct the agent from episodic buffer (short
+# term memory) and lexical access (word knowledge)
+from emo20q.gpdaquestioner import LexicalAccess
+from emo20q.gpdaquestioner import SemanticKnowledge
+from emo20q.gpdaquestioner import EpisodicBuffer
+from emo20q.qa import answer_emotion_question
 
 @app.route('/qa', methods=['GET'])
 def qa():
@@ -124,19 +88,9 @@ def qa():
     if emotion is None or question is None:
         return page
 
-    # if there are args, run them through bert
+    # if there are args, run them through bert, via qa module
+    answer = answer_emotion_question(emotion, question)
     
-    encoded = bert_encode2({"emotion": [emotion], "question": [question]})
-    #print(emotion,question, encoded)
-    res = model([encoded['input_word_ids'],
-                 encoded['input_mask'],
-                 encoded['input_type_ids']], training=False)
-    #print(res)
-    # print(tf.argmax(res, axis=1))
-    # print(tf.argmax(res, axis=1)[0])
-    # print(id2lab[int(tf.argmax(res, axis=1)[0])])
-    answer = id2lab[int(tf.argmax(res, axis=1)[0])]
-    #return render_template('emo20q_chat.html')
     return f"""
     <html>
     <head>
@@ -159,21 +113,6 @@ def qa():
     """
 
 
-# import emo20q agent: need to set the path
-path = "./emo20q"
-if path not in sys.path:
-    sys.path.insert(0,path)
-sys.path.insert(0,path)
-
-import emo20q
-from emo20q.gpdaquestioner import QuestionerAgent
-
-# it would be nice to just pickle the whole agent, but because of
-# lambdas we need to reconstruct the agent from episodic buffer (short
-# term memory) and lexical access (word knowledge)
-from emo20q.gpdaquestioner import LexicalAccess
-from emo20q.gpdaquestioner import SemanticKnowledge
-from emo20q.gpdaquestioner import EpisodicBuffer
 
 # create an endpoint/route for the app ( '/' is the root of the
 # server)
@@ -225,7 +164,7 @@ def pbot_connect():
             """ this part is a bit verbose and error prone"""
             episodic_buffer, state_name, belief = \
                     pickle.load(open(str(pickled_path), "rb"))
-            agent = QuestionerAgent(episodicBuffer=episodic_buffer,
+            agent = QAAgent(episodicBuffer=episodic_buffer,
                                     lexicalAccess=LexicalAccess(),
                                     semanticKnowledge=SemanticKnowledge())
             #import pdb; pdb.set_trace()
@@ -234,9 +173,9 @@ def pbot_connect():
         except Exception as ex: # normally a bare except is not good but this is just
                 # for illustration
             print(ex)
-            agent = QuestionerAgent()
+            agent = QAAgent()
     else: # this should occur when it is the users first visit
-        agent = QuestionerAgent()
+        agent = QAAgent()
 
 
     #time.sleep(1)
@@ -251,7 +190,7 @@ def pbot_connect():
         agent_id = uuid.uuid4()
         print(agent_id)
         session['agent_id'] = agent_id
-        agent = QuestionerAgent()
+        agent = QAAgent()
         agent_output = agent("")
 
     print(agent_output)
@@ -306,7 +245,7 @@ def pbot_message(message):
             """ this part is a bit verbose and error prone"""
             episodic_buffer, state_name, belief = \
                     pickle.load(open(str(pickled_path), "rb"))
-            agent = QuestionerAgent(episodicBuffer=episodic_buffer,
+            agent = QAAgent(episodicBuffer=episodic_buffer,
                                     lexicalAccess=LexicalAccess(),
                                     semanticKnowledge=SemanticKnowledge())
             #import pdb; pdb.set_trace()
@@ -315,9 +254,9 @@ def pbot_message(message):
         except Exception as ex: # normally a bare except is not good but this is just
                 # for illustration
             print(ex)
-            agent = QuestionerAgent()
+            agent = QAAgent()
     else: # this should occur when it is the users first visit
-        agent = QuestionerAgent()
+        agent = QAAgent()
 
 
     # give the user input to the agent

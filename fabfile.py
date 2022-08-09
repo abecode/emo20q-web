@@ -147,7 +147,7 @@ def install_webserver_software(c):
     c.sudo("cp /home/ec2-user/emo20q-web/nginx.conf /etc/nginx/", echo=True)
     c.sudo("systemctl enable nginx.service", echo=True)
     c.sudo("systemctl start nginx.service", echo=True)
-    c.sudo("yum install -y python2-certbot-nginx", echo=True)
+    c.sudo("yum install -y python-certbot-nginx", echo=True)
     #c.sudo("sudo certbot --nginx -d emo20q.org -d www.emo20q.org", echo=True)
     
     # this is the cmd I've been using for the webserver:

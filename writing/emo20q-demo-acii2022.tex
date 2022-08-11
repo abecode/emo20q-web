@@ -15,48 +15,72 @@
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{Emotion Twenty Questions Dialog System for
-  Lexical Emotional Intelligence \thanks{We thank the following for
-    support and funding: University of St. Thomas Center for Applied
-    Artificial Intelligence and University of St. Thomas Center for
-    Faculty Development Graduate Research Team Grant.}  }
+\title{Emotion Twenty Questions Dialog System for Lexical Emotional
+  Intelligence \thanks{
+    %% We thank the following for support and
+    %% funding: University of St. Thomas Center for Applied Artificial
+    %% Intelligence and University of St. Thomas Center for Faculty
+    %% Development Graduate Research Team Grant.
+    We thank the following for support and funding {\it redacted for
+      anonymity}.  }  }
 
-\author{\IEEEauthorblockN{Abe Kazemzadeh}
-\IEEEauthorblockA{\textit{Graduate Programs in Software} \\
-\textit{University of St. Thomas}\\
-St. Paul, MN, U.S.A. \\
-%abe.kazemzadeh@stthomas.edu,
-orcid:0000-0002-1851-294X}
-\and
-\IEEEauthorblockN{2\textsuperscript{nd} Given Name Surname}
+\author{
+\IEEEauthorblockN{1\textsuperscript{st} Anonymous Surname1}
 \IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
 \textit{name of organization (of Aff.)}\\
 City, Country \\
 email address or ORCID}
 \and
-\IEEEauthorblockN{3\textsuperscript{rd} Given Name Surname}
+\IEEEauthorblockN{2\textsuperscript{nd} Anonymous Surname2}
 \IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
 \textit{name of organization (of Aff.)}\\
 City, Country \\
 email address or ORCID}
 \and
-\IEEEauthorblockN{4\textsuperscript{th} Given Name Surname}
+\IEEEauthorblockN{3\textsuperscript{rd} Anonymous Surname3}
 \IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
 \textit{name of organization (of Aff.)}\\
 City, Country \\
 email address or ORCID}
-\and
-\IEEEauthorblockN{5\textsuperscript{th} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
-\and
-\IEEEauthorblockN{6\textsuperscript{th} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
+
+
+%% \IEEEauthorblockN{Abe Kazemzadeh}
+%% \IEEEauthorblockA{\textit{Graduate Programs in Software} \\
+%% \textit{University of St. Thomas}\\
+%% St. Paul, MN, U.S.A. \\
+%% %abe.kazemzadeh@stthomas.edu,
+%% orcid:0000-0002-1851-294X}
+%% \and
+%% \IEEEauthorblockN{ Ola Sanusi}
+%% \IEEEauthorblockA{\textit{Graduate Programs in Software} \\
+%% \textit{University of St. Thomas}\\
+%% St. Paul, MN, U.S.A. \\
+%% ola.sanusi@stthomas.edu}
+%% \and
+%% \IEEEauthorblockN{Huihui (Summer) Nie}
+%% \IEEEauthorblockA{\textit{Graduate Programs in Software} \\
+%% \textit{University of St. Thomas}\\
+%% St. Paul, MN, U.S.A. \\
+%%}
+
+%% \and
+%% \IEEEauthorblockN{4\textsuperscript{th} Given Name Surname}
+%% \IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+%% \textit{name of organization (of Aff.)}\\
+%% City, Country \\
+%% email address or ORCID}
+%% \and
+%% \IEEEauthorblockN{5\textsuperscript{th} Given Name Surname}
+%% \IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+%% \textit{name of organization (of Aff.)}\\
+%% City, Country \\
+%% email address or ORCID}
+%% \and
+%% \IEEEauthorblockN{6\textsuperscript{th} Given Name Surname}
+%% \IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+%% \textit{name of organization (of Aff.)}\\
+%% City, Country \\
+%% email address or ORCID}
 }
 
 \maketitle
@@ -87,7 +111,7 @@ email address or ORCID}
   %the demo, if applicable:
 
   The demo system will be available to collect pilot data during
-  the ACII conference at and this data will be used to inform future
+  the ACII conference and this data will be used to inform future
   experiments and system design.
 
   % Our early results indicate that ...
@@ -101,7 +125,8 @@ email address or ORCID}
 \end{abstract}
 
 \begin{IEEEkeywords}
-emotions, natural language processing, dialog, question-answering, EMO20Q
+emotions, natural language processing, dialog systems,
+question-answering, EMO20Q, lexicon
 \end{IEEEkeywords}
 
 \begin{figure}[h]
@@ -119,56 +144,62 @@ This demo system aims to use a dialog agent to collect question-answer
 data about human emotions.  We use the emotion twenty questions game
 (EMO20Q) as the experimental setting.  In EMO20Q, one player picks an
 emotion word and the other player tries to guess it in twenty or fewer
-turns. The player that picks the emotion word is the {\it answerer},
-because they answer questions about the emotion word that they picked.
-The player who tries to guess the emotion word is the {\it questioner}
-because they ask questions in order to identify the emotion word.
+turns. The player that picks the emotion word plays the {\it
+  question-answering} role, because they answer questions about the
+emotion word that they picked.  The player who tries to guess the
+emotion word plays the {\it question-asking} role because they ask
+questions in order to identify the emotion word.
 
 Both player roles for EMO20Q could be played by humans or computers.
-Our past approach involved having humans play EMO20Q and using this
-data to train artificially intelligent dialog agents to play the
-questioner role \cite{Kazemzadeh2012}.  This work used a sequential
-Bayesian probablistic model for the questioner role in the game
+Past research collected data of humans playing both roles and then
+used this data to train dialog agents to play the question-asking role
+\cite{Kazemzadeh2012}.  This past work used a sequential Bayesian
+probabilistic model for the question-asking role in the game
 \cite{Kazemzadeh2012}: the input was a sequence of question-answer
 pairs. The question set comes from human-human dialogs and the
 particular question that the agent asks is chosen based on the dialog
 history. The answers come from the user's corresponding responses.
 Posterior probabilities of the emotion words are updated based on
 these sequential question-answer inputs.
+% move based on Summer's suggestion?
+%% In our previous work \cite{Kazemzadeh2016} work, we considered the
+%% questioner role to be easier because the set of questions was
+%% predetermined based on the human-human dialogs, so the only open-ended
+%% input is the answers to yes-no questions.  These are not restricted to
+%% yes or no, but it is trivial to bucket these responses into
+%% yes/no/other categories.
 
-At the time of our earlier
-work, we considered the questioner role to be easer because the set of
-questions was predetermined based on the human-human dialogs, so the
-only open-ended input is the answers to yes-no questions.  These are
-not restricted to yes or no, but it is trivial to bucket these
+The current work aims to extend the approach to a dialog agent that
+can play the question-answering role. In this case, the agent picks
+the emotion word from words seen in previously collected data (167
+words) and answers questions posed by the user. In this case, the
+agent's inputs are very open-ended: any possible yes/no questions
+about emotions.  Many questions, especially earlier in the game, have
+been seen before (e.g., ``is it a positive emotion?'', ``is it a
+negative emotion?'', ``is it an emotion that is directed at another
+person?'', ``is it an emotion that lasts a long time?''), but in
+principle, any questions could be asked.  In comparison, the inputs to
+the question-asking role are more limited.  The question-asking agent
+asks questions from the set of questions seen in human-human data and
+its inputs are answers to these yes-no questions. The answers are not
+restricted to yes or no, but it is fairly trivial to bucket these
 responses into yes/no/other categories.
 
-Our current work aims to extend the approach to a dialog agent that
-can play the answerer role. In this case, the agent picks the emotion
-word from previously seen words (todo: include how many emotion words)
-and answers questions posed by the user. In this case, the agent's
-input is much more open-ended: any possible yes/no question about
-emotions.  Many questions, especially earlier in the game, have been
-seen before (e.g., ``is it a positive emotion?'', ``is it a negative
-emotion?'', ``is it an emotion that is directed at another person?'',
-``is it an emotion that lasts along time?''), but in principle, any
-question could be asked.  To deal with this open-ended question task,
-we aim to leverage neural large language models (LLM), which encode
-linguistic knowledge from large pre-training data sets into neural
-networks, which can then be fine-tuned into task specific models with
-relatively smaller datasets.
+To deal with the open-ended question-answering task, we aim to
+leverage neural large language models (LLM), which encode linguistic
+knowledge from large pre-training datasets into neural networks,
+which can then be fine-tuned into task specific models with relatively
+smaller datasets.  % currently using a place holder/basic model and will
 
 
-Our goal for the current work is to use the system to continue to test
+The goal for EMO20Q dialog system is to use dialog agents to test
 hypotheses about how well automated systems can understand language
 about emotions.
 
-The current system still involves an automated agent
-playing with a human user.  However, with dialog agents that can play
-both both roles, two automated agents could play EMO20Q with each
-other.
-
-
+%% The current system still involves an automated agent
+%% playing with a human user.  However, with dialog agents that can play
+%% both both roles, two automated agents could play EMO20Q with each
+%% other.
 
 
 %% \section{Stash}
@@ -181,14 +212,14 @@ other.
 
 \section{Web Front End}
 
-To simply display the front end of the demo system we used Flask, a
+To simply display the front end of the demo system, we used Flask, a
 lightweight Python web framework.  Using the simple request-response
 interaction of a basic web server would have been an option, but it
 would require a page reload for every dialog turn and could result in
 slow response times, especially in cases where prediction requires
-beam search (the question answering role).  To prevent page reloads
-and response delays, we used Websockets via the Socket.io library,
-which enables bidirectional communication between the browswer and
+beam search (the question-answering role).  To prevent page reloads
+and response delays, we used WebSockets via the Socket.io library,
+which enables bidirectional communication between the browser and
 web server.  Dialog events, i.e. turns from the user (via the browser)
 or agent (via the server), trigger updates to a typical speech bubble
 dialog display, as seen in Fig.~\ref{fig:emo20q-flask-websocket}.
@@ -197,18 +228,24 @@ dialog display, as seen in Fig.~\ref{fig:emo20q-flask-websocket}.
 
 The dialog agent was trained using a method inspired by wizard of Oz
 approaches \cite{Fraser1991} and games with a purpose
-\cite{Ahn2004}. First both roles of EMO20Q were played by non-expert
-human players. Then later work created automated agent for the
-question-asking role by finding the conditional probabilities of
-(question, answer) pairs given emotion words and using these to create
-a sequential Bayesian probabilistic model \cite{Kazemzadeh2012}.  Our
-current work has focused on the question-answering role.  This current
-work has benefitted from recent trends in transfer-learned deep neural
-language models.  In particular
+\cite{Ahn2004}. First, non-expert human players played both roles of
+EMO20Q, which provided an initial set of training data. Then, we
+created automated agent for the question-asking role by finding the
+conditional probabilities of (question, answer) pairs given emotion
+words and using these to create a sequential Bayesian probabilistic
+model \cite{Kazemzadeh2012}, which provided a further source of
+training data.  The current work has focused on the question-answering
+role.  This current work has benefited from recent trends in
+transfer-learned deep neural language models.  In particular
 %, we used BERT, an encoder only system, and
-T5 \cite{Raffel2020}, an encoder-decoder pretrained language model for
-our demo system, though a more systematic examination of other models
-is planned for future work.
+%% T5 \cite{Raffel2020}, an encoder-decoder pretrained language model for
+%% this demo system, though a more systematic examination of other models
+%% is planned for future work.
+this demo uses BERT \cite{Devlin2019} to classify (emotion, question)
+pairs into ``yes'', ``no'', and ``maybe'' categories. Although our
+system achieves reasonable performance of about 72\% accuracy on
+question-answering, we plan that the demo system will be an
+experimental tool to more fully evaluate this and other models.
 
 The programming of the agent is based on a generalized pushdown
 automaton (GPDA) \cite{Allauzen2012}.  The abilities of a general
@@ -219,36 +256,55 @@ transition graph of the automaton is implemented with NetworkX Python
 library.
 
 
-\section{Discussion}
-Should the transformer use an encoder + classifier approach, or a
-encoder + decoder (sequence-to-sequence) approach?
+\section{Discussion and Future Work}
 
-The former (classifier) is arguably simpler and would fit better with
-the existing yes/no/other approach (though binary vs. ternary). The
-latter would allow more diverse, fluent type responses besides yes/no
-(and perhaps other for soft/fuzzy classfications)
+This paper presented an overview of a tool that we will use to test
+the abilities of automated systems to talk about emotions with human
+users.  In this demo, we use BERT, an encoder-only model set up as a
+classification model to provide yes/no/maybe answers.  This
+classification approach fits with the existing approached used by the
+question-asking agent. Other transformer models that include decoders
+may allow for more fluent output and may be able to encompass the
+functionality currently covered by the dialog graph,  so we anticipate
+that this will be an area of future testing.
 
-Django vs flask. Flask is simpler to use but lacks the standardized
-user management functions (authentication/login, emails), model view
-controller framework, database ORM, etc., that comes included in
-Django.  While the data generated from the dialogs is json, other
-features of a RDBMS system would be useful in cases where structured
-data is maintained (more digested data like emotion vocabularies, user
-information for demographic information and querying user history).
+Although the agent in our demo appears to the user as a single agent
+playing both roles, the design of the functionality of this single
+agent is currently implemented as two separate agents with different
+machine learning models built on the same data. One area of future
+research is to design a more unified approach where machine learning
+models are shared between the two EMO20Q roles.  This approach could
+enable adversarial training scenarios where two automated agents play
+each other.
 
-If we use the decoder generation as output, what should the generation
-params be?  greedy, beam, etc
 
-ordering of EMO20Q roles: will playing as answerer first prime the
-human user to reuse the agent's questions?
+%% Django vs Flask. Flask is simpler to use but lacks the standardized
+%% user management functions (authentication/login, emails), model-view
+%% controller-framework, database ORM, etc., that comes included in
+%% Django.  While the data generated from the dialogs is json, other
+%% features of a RDBMS system would be useful in cases where structured
+%% data is maintained (more digested data like emotion vocabularies, user
+%% information for demographic information and querying user history).
 
-\section{Future Work}
+%% If we use the decoder generation as output, what should the generation
+%% params be?  greedy, beam, etc
 
-We intend to use this demo system to collect data and use it to test
-models and hypotheses primarily for question-asking role.  Currently,
-the system uses a basic question answering model by fine tuning the
-pretrained T5 model.  Deep learning models have proliferated and there
-are many other models and hyperparameters to test.
+Another issue is the ordering of EMO20Q roles.  Currently, the demo
+system makes the user play the question-answering role first, then the
+question-asking role. This order may induce experimental effects.  For
+example, playing as question-answerer first may prime the human user
+to reuse the agent's questions.
+
+%% We intend to use this demo system to collect data and use it to test
+%% models and hypotheses primarily for the question-asking role.  Currently,
+%% the system implements a basic question-answering model by fine tuning the
+%% pretrained BERT model.  Using the demo system, we hope to test and improve this model as well as 
+
+In conclusion, we demonstrate an automated system that plays EMO20Q
+using a web-based chat interface and a mix of older probabilistic
+models for the question-asking role and a fine-tuned BERT model for
+the question-answering role.
+
 
 %Also, the game
 %setting may be a possible application for adversarial training.
@@ -256,9 +312,11 @@ are many other models and hyperparameters to test.
 
 \section{Ethics Statement}
 
-This research has been approved by the University of St. Thomas
+This research has been approved by the
+%University of St. Thomas
+{\it redacted for anonymity}
 institutional review board (IRB).  Data is not collected with
-personally identifying information (PII) and the collected with be
+personally identifiable information (PII) and the collected with be
 examined for PII before public dissemination.
 
 

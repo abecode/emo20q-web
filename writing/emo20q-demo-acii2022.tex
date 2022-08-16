@@ -11,57 +11,40 @@
 \usepackage{algorithmic} \usepackage{graphicx} \usepackage{textcomp}
 \usepackage{xcolor} \usepackage{hyperref} \usepackage[normalem]{ulem}
 
+%\setlength{\belowcaptionskip}{-1.5cm}
+%\setlength{\floatsep}{-4pt}
+\addtolength{\textfloatsep}{-0.25in}
+
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
 \title{Emotion Twenty Questions Dialog System for Lexical Emotional
-  Intelligence \thanks{
-    %% We thank the following for support and
-    %% funding: University of St. Thomas Center for Applied Artificial
-    %% Intelligence and University of St. Thomas Center for Faculty
-    %% Development Graduate Research Team Grant.
-    We thank the following for support and funding {\it redacted for
-      anonymity}.  }  }
+  Intelligence \thanks{ We thank the following for support and
+    funding: University of St. Thomas Graduate Programs in Software's
+    Center for Applied Artificial Intelligence and University of
+    St. Thomas Center for Faculty Development Graduate Research Team
+    Grant.  }  }
 
 \author{
-\IEEEauthorblockN{1\textsuperscript{st} Anonymous Surname1}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
+\IEEEauthorblockN{Abe Kazemzadeh}
+\IEEEauthorblockA{\textit{Graduate Programs in Software} \\
+\textit{University of St. Thomas}\\
+St. Paul, MN, U.S.A. \\
+%abe.kazemzadeh@stthomas.edu,
+orcid:0000-0002-1851-294X}
 \and
-\IEEEauthorblockN{2\textsuperscript{nd} Anonymous Surname2}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
+\IEEEauthorblockN{ Ola Sanusi}
+\IEEEauthorblockA{\textit{Graduate Programs in Software} \\
+\textit{University of St. Thomas}\\
+St. Paul, MN, U.S.A. \\
+ola.sanusi@stthomas.edu}
 \and
-\IEEEauthorblockN{3\textsuperscript{rd} Anonymous Surname3}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
-
-
-%% \IEEEauthorblockN{Abe Kazemzadeh}
-%% \IEEEauthorblockA{\textit{Graduate Programs in Software} \\
-%% \textit{University of St. Thomas}\\
-%% St. Paul, MN, U.S.A. \\
-%% %abe.kazemzadeh@stthomas.edu,
-%% orcid:0000-0002-1851-294X}
-%% \and
-%% \IEEEauthorblockN{ Ola Sanusi}
-%% \IEEEauthorblockA{\textit{Graduate Programs in Software} \\
-%% \textit{University of St. Thomas}\\
-%% St. Paul, MN, U.S.A. \\
-%% ola.sanusi@stthomas.edu}
-%% \and
-%% \IEEEauthorblockN{Huihui (Summer) Nie}
-%% \IEEEauthorblockA{\textit{Graduate Programs in Software} \\
-%% \textit{University of St. Thomas}\\
-%% St. Paul, MN, U.S.A. \\
-%%}
+\IEEEauthorblockN{Huihui (Summer) Nie}
+\IEEEauthorblockA{\textit{Graduate Programs in Software} \\
+\textit{University of St. Thomas}\\
+St. Paul, MN, U.S.A. \\
+summer.nie@stthomas.edu}
 
 %% \and
 %% \IEEEauthorblockN{4\textsuperscript{th} Given Name Surname}
@@ -84,7 +67,6 @@ email address or ORCID}
 }
 
 \maketitle
-
 \begin{abstract}
   %A brief background introduction and description of the system:
   
@@ -313,8 +295,7 @@ the question-answering role.
 \section{Ethics Statement}
 
 This research has been approved by the
-%University of St. Thomas
-{\it redacted for anonymity}
+University of St. Thomas
 institutional review board (IRB).  Data is not collected with
 personally identifiable information (PII) and the collected with be
 examined for PII before public dissemination.
@@ -322,5 +303,7 @@ examined for PII before public dissemination.
 
 
 \bibliographystyle{ieeetr}
-\bibliography{../../../Dropbox/org/reference/AbesBigBibliography}
+%\vspace{-0.5cm}
+%\bibliography{../../../Dropbox/org/reference/AbesBigBibliography}
+\input{emo20q-demo-acii2022.bbl}
 \end{document}

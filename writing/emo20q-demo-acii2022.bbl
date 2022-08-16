@@ -1,0 +1,29 @@
+\begin{thebibliography}{1}
+
+\bibitem{Kazemzadeh2012}
+A.~Kazemzadeh, J.~Gibson, J.~Li, S.~Lee, P.~G. Georgiou, and S.~Narayanan, ``A
+  sequential {B}ayesian agent for computational ethnography,'' in {\em
+  Proceedings of Interspeech}, (Portland, OR), October 2012.
+
+\bibitem{Fraser1991}
+N.~M. Fraser and G.~N. Gilbert, ``Simulating speech systems,'' vol.~5,
+  pp.~81--99, 1991.
+
+\bibitem{Ahn2004}
+L.~von Ahn and L.~Dabbish, ``Labeling images with a computer game,'' in {\em
+  Proceedings of the SIGCHI conference on Human factors in computing systems},
+  2004.
+
+\bibitem{Devlin2019}
+J.~Devlin, M.-W. Chang, K.~Lee, and K.~Toutanova, ``{BERT}: {P}re-training of
+  {D}eep {B}idirectional {T}ransformers for {L}anguage {U}nderstanding,'' in
+  {\em Proceedings of the 2019 Conference of the North {A}merican Chapter of
+  the Association for Computational Linguistics: Human Language Technologies},
+  NAACL, NAACL, 2019.
+
+\bibitem{Allauzen2012}
+C.~Allauzen and M.~Riley, ``A pushdown transducer extension for the openfst
+  library,'' in {\em Proceedings of the Conference on Implementation and
+  Application ofAutomata}, 2012.
+
+\end{thebibliography}

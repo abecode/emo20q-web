@@ -17,6 +17,29 @@
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\usepackage{fancyhdr}
+\thispagestyle{fancy}
+
+\renewcommand{\headrulewidth}{0pt}
+\fancyhf{}
+\fancyhead[C]{2022 10th International Conference on Affective Computing and Intelligent Interaction Workshops and Demos (ACIIW)}
+
+% !!!!!!!!!!! IMPORTANT: PLEASE CHOOSE THE COPYRIGHT INFORMATION BELOW ACCORDING TO YOUR EMPLOYMENT TYPE !!!!!!!!!
+
+%For papers in which all authors are employed by the US government, the copyright notice is:
+%\fancyfoot[L]{U.S. Government work not protected by U.S. copyright}
+
+%For papers in which all authors are employed by a Crown government (UK, Canada, and Australia), the copyright notice is:
+%\fancyfoot[L]{978-1-6654-5490-2/22/\$31.00 \copyright 2022 Crown}
+
+%For papers in which all authors are employed by the European Union, the copyright notice is:
+%\fancyfoot[L]{978-1-6654-5490-2/22/\$31.00 \copyright 2022 European Union}
+ 
+%For all other papers the copyright notice is:
+\fancyfoot[L]{978-1-6654-5490-2/22/\$31.00 \copyright 2022 IEEE}
+
+
 \begin{document}
 
 \title{Emotion Twenty Questions Dialog System for Lexical Emotional
@@ -34,7 +57,8 @@ St. Paul, MN, U.S.A. \\
 %abe.kazemzadeh@stthomas.edu,
 orcid:0000-0002-1851-294X}
 \and
-\IEEEauthorblockN{ Ola Sanusi}
+%\IEEEauthorblockN{ Ola Sanusi}
+\IEEEauthorblockN{ Adedamola Sanusi}
 \IEEEauthorblockA{\textit{Graduate Programs in Software} \\
 \textit{University of St. Thomas}\\
 St. Paul, MN, U.S.A. \\
@@ -42,6 +66,7 @@ ola.sanusi@stthomas.edu}
 \and
 \IEEEauthorblockN{Huihui (Summer) Nie}
 \IEEEauthorblockA{\textit{Graduate Programs in Software} \\
+%%\IEEEauthorblockA{\textit{Graduate Programs in Software, PricewaterhouseCoopers} \\
 \textit{University of St. Thomas}\\
 St. Paul, MN, U.S.A. \\
 summer.nie@stthomas.edu}
@@ -67,6 +92,8 @@ summer.nie@stthomas.edu}
 }
 
 \maketitle
+\thispagestyle{fancy}
+
 \begin{abstract}
   %A brief background introduction and description of the system:
   
@@ -77,7 +104,7 @@ summer.nie@stthomas.edu}
   % or artificial intelligent 
   dialog agents that can play the game.  In
   previous work, an EMO20Q agent used a sequential Bayesian machine
-  learning model and could play the role of asking questions.  Newer
+  learning model and could play the question-asking role.  Newer
   transformer-based neural machine learning models have made it
   possible to develop an agent for the question-answering role.
 
@@ -129,7 +156,7 @@ emotion word and the other player tries to guess it in twenty or fewer
 turns. The player that picks the emotion word plays the {\it
   question-answering} role, because they answer questions about the
 emotion word that they picked.  The player who tries to guess the
-emotion word plays the {\it question-asking} role because they ask
+emotion word plays the {\it question-asking} role, because they ask
 questions in order to identify the emotion word.
 
 Both player roles for EMO20Q could be played by humans or computers.
@@ -170,7 +197,7 @@ responses into yes/no/other categories.
 To deal with the open-ended question-answering task, we aim to
 leverage neural large language models (LLM), which encode linguistic
 knowledge from large pre-training datasets into neural networks,
-which can then be fine-tuned into task specific models with relatively
+which can then be fine-tuned into task-specific models using relatively
 smaller datasets.  % currently using a place holder/basic model and will
 
 
@@ -234,7 +261,7 @@ automaton (GPDA) \cite{Allauzen2012}.  The abilities of a general
 finite state automata are sufficient for most of the dialog behavior,
 but the pushdown stack is used to maintain contextual information that
 represents short-term/working memory in the question-asking role. The
-transition graph of the automaton is implemented with NetworkX Python
+transition graph of the automaton is implemented with the NetworkX Python
 library.
 
 
@@ -244,7 +271,7 @@ This paper presented an overview of a tool that we will use to test
 the abilities of automated systems to talk about emotions with human
 users.  In this demo, we use BERT, an encoder-only model set up as a
 classification model to provide yes/no/maybe answers.  This
-classification approach fits with the existing approached used by the
+classification approach fits with the existing approaches used by the
 question-asking agent. Other transformer models that include decoders
 may allow for more fluent output and may be able to encompass the
 functionality currently covered by the dialog graph,  so we anticipate
@@ -297,8 +324,8 @@ the question-answering role.
 This research has been approved by the
 University of St. Thomas
 institutional review board (IRB).  Data is not collected with
-personally identifiable information (PII) and the collected with be
-examined for PII before public dissemination.
+personally identifiable information (PII) and the collected data will be
+examined again for PII before public dissemination.
 
 
 

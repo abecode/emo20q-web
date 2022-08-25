@@ -23,9 +23,10 @@ import patchwork.transfers
 #REGION = os.environ.get("REGION", "us-east-2")
 PROFILE = "ust"
 #PROFILE = "default"
-APP_NAME = "emo20q"
+APP_NAME = "emo20q-staging"
 #INSTANCE_TYPE = "t2.micro"
-INSTANCE_TYPE = "t3a.medium"
+#INSTANCE_TYPE = "t3a.medium"
+INSTANCE_TYPE = "t3a.large"
 AMI = "ami-02d1e544b84bf7502" # aws linux as of 2022-07-13
 
 
@@ -49,7 +50,7 @@ def spin_up_server(c):
         return ipaddress
     #result = run(f"aws --profile {PROFILE} ec2 run-instances --image-id {AMI} --count 1 --instance-type t2.micro --key-name ust-aws --query 'Instances[0].InstanceId'", echo=True)
     result = run(f"aws --profile {PROFILE} ec2 run-instances --image-id {AMI} --count 1 --instance-type {INSTANCE_TYPE}  --key-name ust-aws --query 'Instances[0].InstanceId'", echo=True)
-    t3a.medium
+    #t3a.medium
     print(result)
     #pdb.set_trace()
     instance_id = result.stdout.strip()

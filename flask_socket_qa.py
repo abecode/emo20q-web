@@ -1,8 +1,5 @@
-#!/usr/bin/env python3
 
-# This is a basic webserver that will wrap the emo20q questioner
-# agent and implement the dialog by representing user input by http
-# request and system response by http response
+#!/usr/bin/env python3
 
 import pickle # for saving python objects
 import os # for paths
@@ -144,8 +141,9 @@ def img(filename):
 
 # socket connection events
 @socketio.on('connect', namespace='/pbot')
-def pbot_connect():
+def pbot_connect(message):
     """ first connection where the dialog system starts"""
+    print("event: pbot_connect", message)
 
     # create agent
     # first get agent file name if it exists
@@ -157,7 +155,7 @@ def pbot_connect():
         session['agent_id'] = agent_id
 
     # try top open and load the pickled agent
-    pickled_path = str(agent_id)
+    pickled_path = str(agent_id) + ".session"
     print(pickled_path)
     if os.path.exists(pickled_path):
         try:
@@ -223,6 +221,7 @@ def pbot_message(message):
     display on client/browser
 
     """
+    print("event: pbot_message", message)
     user_input = message['data']
     session['receive_count'] = session.get('receive_count', 0) + 1
     emit('loguser',
@@ -238,7 +237,7 @@ def pbot_message(message):
         session['agent_id'] = agent_id
 
     # try top open and load the pickled agent
-    pickled_path = str(agent_id)
+    pickled_path = str(agent_id) + ".session"
     print(pickled_path)
     if os.path.exists(pickled_path):
         try:
@@ -280,6 +279,7 @@ def pbot_message(message):
 
 @socketio.on('disconnect', namespace='/pbot')
 def pbot_disconnect():
+    print("event: pbot_disconnect", message)
     session.clear()
 
 @app.route("/get_my_ip", methods=["GET"])

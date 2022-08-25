@@ -16,3 +16,10 @@
   ```
   python3 flask_basic.py
   ```
+
+## deployment
+
+for testing, just create ["self-signed"
+certificates](https://www.howtogeek.com/devops/how-to-create-and-use-self-signed-ssl-on-nginx/)
+
+for prod, use lets encrypt certbot

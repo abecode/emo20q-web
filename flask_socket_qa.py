@@ -1,10 +1,9 @@
-
 #!/usr/bin/env python3
 
 import pickle # for saving python objects
 import os # for paths
 import sys  # set the python path to find emo20q module
-import time # for sleep
+import time # for sleep and timestamp
 import uuid # for creating a random name for the pickled agent
 
 from gevent import monkey
@@ -150,7 +149,8 @@ def pbot_connect(message):
     if 'agent_id' in session: # if the user has already visited
         agent_id = session['agent_id']
     else:
-        agent_id = uuid.uuid4()
+        timestamp = time.strftime("%Y%m%d-%H%M%S",time.gmtime())
+        agent_id = timestamp + "-" + str(uuid.uuid4())
         print(agent_id)
         session['agent_id'] = agent_id
 

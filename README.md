@@ -28,3 +28,9 @@ security flags in the browser. in Chrome, you can type in
 ["thisisunsafe"](https://stackoverflow.com/questions/7580508/getting-chrome-to-accept-self-signed-localhost-certificate)
 
 for prod, use lets encrypt certbot
+
+here's a page that might help for making the staging to production
+switch without finagling the ssl certificates while the new server is
+starting it's production role
+https://devops4solutions.com/move-lets-encrypt-certs-to-another-server-and-renew-them/
+basically copying /etc/letsencrypt

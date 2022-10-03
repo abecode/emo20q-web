@@ -134,7 +134,6 @@ def extract_json(agent):
             
     return outdict
 
-print(sys.argv.pop(0)) #remove script name
 
 if sys.argv[0].startswith("--"):
     if sys.argv[0].endswith("is-empty"):

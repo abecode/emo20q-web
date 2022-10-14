@@ -1,6 +1,10 @@
 # web frontend for emo20q
 
-## installation
+## ACII Paper
+
+The ACII paper that describes this system can be found at [https://arxiv.org/abs/2210.02400](https://arxiv.org/abs/2210.02400)
+
+## Installation
 
 - first, clone this repository (or fork then clone)
   ```
@@ -14,10 +18,10 @@
 
 - to run the flask app:
   ```
-  python3 flask_basic.py
+  python3 flask_socket_qa.py
   ```
 
-## deployment
+## Deployment
 
 for testing, just create ["self-signed"
 certificates](https://www.howtogeek.com/devops/how-to-create-and-use-self-signed-ssl-on-nginx/)

@@ -38,3 +38,9 @@ switch without finagling the ssl certificates while the new server is
 starting it's production role
 https://devops4solutions.com/move-lets-encrypt-certs-to-another-server-and-renew-them/
 basically copying /etc/letsencrypt
+
+the actual command that is used to run the server in production is
+
+```
+ uwsgi --http :5000 --gevent 200 --wsgi-file flask_socket_qa.py --http-websockets --thunder-lock --callable app
+ ```
